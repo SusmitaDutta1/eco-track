@@ -7,7 +7,7 @@ import { Car, Home, Zap } from "lucide-react"
 
 interface Activity {
   id: string
-  type: "car" | "chimney" | "electricity"
+  type: string
   time: string
   duration: number
   carbonAmount: number
@@ -15,59 +15,21 @@ interface Activity {
 
 export function ActivityList() {
   const [activities, setActivities] = useState<Activity[]>([
-    {
-      id: "1",
-      type: "car",
-      time: "15:20",
-      duration: 27,
-      carbonAmount: 7.28,
-    },
-    {
-      id: "2",
-      type: "chimney",
-      time: "15:20",
-      duration: 27,
-      carbonAmount: 7.28,
-    },
-    {
-      id: "3",
-      type: "electricity",
-      time: "15:20",
-      duration: 27,
-      carbonAmount: 7.28,
-    },
+    
   ])
 
   const [newActivity, setNewActivity] = useState({
-    type: "car",
+    type: "",
     time: "",
     duration: "",
   })
 
   const getIcon = (type: string) => {
-    switch (type) {
-      case "car":
-        return <Car className="h-5 w-5 text-white" />
-      case "chimney":
-        return <Home className="h-5 w-5 text-white" />
-      case "electricity":
-        return <Zap className="h-5 w-5 text-white" />
-      default:
-        return <Car className="h-5 w-5 text-white" />
-    }
+    return <Zap className="h-5 w-5 text-white" />
   }
 
   const getLabel = (type: string) => {
-    switch (type) {
-      case "car":
-        return "Car"
-      case "chimney":
-        return "Chimney"
-      case "electricity":
-        return "Electricity"
-      default:
-        return type
-    }
+    return type
   }
 
   const handleAddActivity = () => {
@@ -76,21 +38,11 @@ export function ActivityList() {
     // Calculate carbon based on type and duration (simplified)
     let carbonAmount = 0
 
-    switch (newActivity.type) {
-      case "car":
-        carbonAmount = Number(newActivity.duration) * 0.27
-        break
-      case "chimney":
-        carbonAmount = Number(newActivity.duration) * 0.27
-        break
-      case "electricity":
-        carbonAmount = Number(newActivity.duration) * 0.27
-        break
-    }
+     carbonAmount = Number(newActivity.duration) * 0.27
 
     const newActivityItem: Activity = {
       id: Date.now().toString(),
-      type: newActivity.type as "car" | "chimney" | "electricity",
+      type: newActivity.type as string,
       time: newActivity.time,
       duration: Number(newActivity.duration),
       carbonAmount: Number(carbonAmount.toFixed(2)),
@@ -98,7 +50,7 @@ export function ActivityList() {
 
     setActivities([...activities, newActivityItem])
     setNewActivity({
-      type: "car",
+      type: "",
       time: "",
       duration: "",
     })
