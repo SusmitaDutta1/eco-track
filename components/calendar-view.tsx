@@ -1,10 +1,11 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Button } from "./ui/button"
+import { Input } from "./ui/input"
 import { ChevronLeft, ChevronRight, Search } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { cn } from "../lib/utils"
+import { getCarbonDataForDate } from "../lib/carbon-storage"
 
 const DAYS_OF_WEEK = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 const MONTHS = [
@@ -158,14 +159,23 @@ export function CalendarView({ onSelectDate }: CalendarViewProps) {
               <div
                 key={index}
                 className={cn(
-                  "aspect-square flex items-center justify-center text-sm rounded-md",
+                  "aspect-square flex flex-col items-center justify-start text-sm rounded-md p-1",
                   day.isCurrentMonth ? "cursor-pointer hover:bg-primary/10" : "text-muted-foreground bg-background/30",
                   day.isToday && "border border-primary/50",
-                  day.isSelected && "bg-primary text-white",
+                  day.isSelected && "bg-primary text-red",
                 )}
                 onClick={() => day.isCurrentMonth && handleSelectDate(day.day)}
               >
-                {day.day}
+                <span>{day.day}</span>
+                {day.isCurrentMonth && (
+                  <div className="text-xs mt-1">
+                    {(() => {
+                      const date = new Date(currentYear, currentMonth, day.day)
+                      const entry = getCarbonDataForDate(date)
+                      return entry ? `${entry.footprint.toFixed(1)} kg` : ''
+                    })()}
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -174,4 +184,3 @@ export function CalendarView({ onSelectDate }: CalendarViewProps) {
     </div>
   )
 }
-
